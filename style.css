@@ -1,0 +1,71 @@
+/* GENERAL STYLES */
+*{
+  font-family: 'Poppins', sans-serif;
+  font-size:x-large;
+}
+
+/* HEADER*/
+#logo{
+  position: relative;
+  top: 0;
+  left: 35%;
+  width: 30%
+}
+#logo2{
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  width: 20%;
+}
+
+/* GRID */
+#grid{
+  display:flex;
+  margin-top:150px;
+  padding-left: 10%;
+  padding-right: 10%;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items:flex-end;
+  align-content: center;
+}
+#grid img{
+  width: 20%;
+  padding:2px;
+  border-radius: 20px;
+}
+
+/*MENU */
+
+#menu{
+  display:flex;
+  /* margin-top: 50px; */
+  padding-left: 18%;
+  padding-right: 18%;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items:center;
+  align-content: center;
+}
+#restart_btn{
+  background-color: #fff;
+  font-size: 20px;
+  color: #47b038;
+  border: 4px outset #e7e7e7;
+  border-radius:6px;
+}
+#restart_btn:hover{
+  background-color: #47b038;
+  color: #fff;
+  border: 4px outset #e7e7e7;
+  border-radius:6px;
+}
+#info_btn{
+  background-color: #fff;
+  border: none;
+}
+
+/* UTILITIES */
+.center{
+  margin:auto
+}
