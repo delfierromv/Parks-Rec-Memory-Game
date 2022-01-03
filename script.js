@@ -68,20 +68,37 @@ document.addEventListener('DOMContentLoaded',() =>{
     }
   ]
  
+  //GLOBAL VARIABLES & FUNCTIONS
   cardArray.sort(()=> 0.3- Math.random());
   console.log(cardArray);
  
   const grid = document.querySelector('#grid')
   let cardChosen = []
   let cardChosenId = [];
-  let cardsWon = [];
+  const clearArray = function(){
+   cardChosen = [];
+   cardChosenId = [];
+  };
+  let pairsFound = 0;
   let moves= 0;
   const greenBlank = 'images/pnr_blank1.jpeg';
   const movesDisplay = document.getElementById("result");
-  const moveDisplayFunc = function(){movesDisplay.textContent = `${moves}`};
 
- //CREATE BOARD function
+  const moveDisplayFunc = function(){
+    moves++;
+    movesDisplay.textContent = `${moves}`;
+  };
 
+ 
+  //INFO BUTTON
+  const infoBtn = document.querySelector('#info_btn');
+  const info = function(){
+    //Click on any two cards to flip them over and see if they match. When the two chosen cards match, they will be removed from the board and your moves at the bottom-left of the screen will increase by one. When the two chosen cards DO NOT match, they will be flipped back over and your moves will increase by one as well. The goal is to memorize where the pairs are and complete the game with the lowest moves possible. The game continues until all cards have been matched.
+  }
+  infoBtn.addEventListener('click',info())
+
+
+ //CREATE BOARD function------------------------------
 function createBoard(){
   for(let i = 0; i< cardArray.length;i++){
     let card = document.createElement('img');
@@ -97,7 +114,7 @@ function createBoard(){
   }
 }
 
-// CHECK FOR MATCHES
+// CHECK FOR MATCHES------------------------------
 function checkMatch(){
   let flippedCard;
   console.log(cardChosen[0]);
@@ -111,35 +128,48 @@ function checkMatch(){
       flippedCard.setAttribute('src','images/white_blank.jpg');
       flippedCard.style.padding= "0";
     });
-    //ALERT RIGHT ANSWER
-    alert('You got it right!');
     // ADD MOVE TO MOVES
-    moves++;
     moveDisplayFunc();
-    // Clear out cardChosen & cardChosenId array by popping cards into cardsWon
-    cardChosen = [];
-    cardChosenId = [];
+    //ADD PAIR TO PAIRS FOUND
+    pairsFound++;
+    console.log(pairsFound);
+    // CLEAR OUT CARDCHOSEN/CHARDCHOSENID ARRAY USING POP
+    cardChosen=[];
+    cardChosenId =[];
   } 
   //NOT FINDING A MATCH
   else if(cardChosen[0]!== cardChosen[1]){
     //FLIP CARDS BACK OVER
-    flippedCard = document.querySelector(`[data-id='${cardChosenId[i]}']`);
-    flippedCard.setAttribute('src','images/pnr_blank1');
-    alert('wrong');
+    const flipBack = function(){
+      return cardChosen.map((_,i)=>{
+      flippedCard = document.querySelector(`[data-id='${cardChosenId[i]}']`);
+      flippedCard.setAttribute('src',`${greenBlank}`);
+      });
+    }
+    flipBack();
+    //ADD MOVE TO MOVES
+    moveDisplayFunc();
+    // CLEAR OUT CARDCHOSEN/CHARDCHOSENID ARRAY USING POP
+    clearArray();
+    
   }
-  else{
-    console.log('error');
-  }
-}
+  else {alert('error')};
+  //ALERT WHEN ALL CARDS ARE MATCHED
+  const won = function(){
+    if(pairsFound===8){
+    alert('YOU WON!');
+    }
+  };
+  won();
+};
 
-// FLIP YOUR CARD
-
+// FLIP YOUR CARD------------------------------
 function flipCard (){
   let cardId = this.getAttribute('data-id');
   cardChosen.push(cardArray[cardId].name);
   cardChosenId.push(cardId);
   if (cardChosen.length ===2){
-    setTimeout(checkMatch, 200);
+    setTimeout(checkMatch, 1500);
   };
   console.log(cardChosen);
   console.log(cardChosenId);
