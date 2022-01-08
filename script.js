@@ -69,8 +69,9 @@ document.addEventListener('DOMContentLoaded',() =>{
   ]
  
   //GLOBAL VARIABLES & FUNCTIONS
-  cardArray.sort(()=> 0.3- Math.random());
-  console.log(cardArray);
+  const sortArr = ()=> cardArray.sort(()=> 0.3- Math.random());
+  sortArr();
+  
  
   const grid = document.querySelector('#grid')
   let cardChosen = []
@@ -89,13 +90,6 @@ document.addEventListener('DOMContentLoaded',() =>{
     movesDisplay.textContent = `${moves}`;
   };
 
- 
-  //INFO BUTTON
-  const infoBtn = document.querySelector('#info_btn');
-  const info = function(){
-    //Click on any two cards to flip them over and see if they match. When the two chosen cards match, they will be removed from the board and your moves at the bottom-left of the screen will increase by one. When the two chosen cards DO NOT match, they will be flipped back over and your moves will increase by one as well. The goal is to memorize where the pairs are and complete the game with the lowest moves possible. The game continues until all cards have been matched.
-  }
-  infoBtn.addEventListener('click',info())
 
 
  //CREATE BOARD function------------------------------
@@ -106,7 +100,7 @@ function createBoard(){
     card.setAttribute('src',`${greenBlank}`);
     //giving each card a data id--data id's are useful when wanting to store data that is constantly changing and also when wanting to store extra information on standard elements without having to use hacks that you would need to use with non-standard attributes.
     card.setAttribute('data-id', i); //this gives the element a data-id between 0 and cardArray.length -1
-    console.log(card);
+    card.setAttribute('class', 'card');
     //ADD EVENT LISTENER TO INVOKE FUNCTION WHEN CARDS ARE CLICKED ON-- when writing this part, we will have to comment this out as we have not made the function flipcard yet.
     card.addEventListener('click', flipCard)
     //NOW we will add each iteration to the grid
@@ -117,22 +111,18 @@ function createBoard(){
 // CHECK FOR MATCHES------------------------------
 function checkMatch(){
   let flippedCard;
-  console.log(cardChosen[0]);
-  console.log(cardChosen[1]);
-  console.log(cardChosen);
   //FINDING A MATCH
   if (cardChosen[0]===cardChosen[1]){
     //"remove" card from game
     cardChosen.map((_,i)=>{
       flippedCard = document.querySelector(`[data-id='${cardChosenId[i]}']`);
       flippedCard.setAttribute('src','images/white_blank.jpg');
-      flippedCard.style.padding= "0";
+      // flippedCard.style.padding= "0";
     });
     // ADD MOVE TO MOVES
     moveDisplayFunc();
     //ADD PAIR TO PAIRS FOUND
     pairsFound++;
-    console.log(pairsFound);
     // CLEAR OUT CARDCHOSEN/CHARDCHOSENID ARRAY USING POP
     cardChosen=[];
     cardChosenId =[];
@@ -168,21 +158,46 @@ function flipCard (){
   let cardId = this.getAttribute('data-id');
   cardChosen.push(cardArray[cardId].name);
   cardChosenId.push(cardId);
+  // SHOWING THE GIF
+  const show = function(){
+    let flipped = document.querySelector(`[data-id='${cardId}']`);
+    flipped.setAttribute('src', cardArray[cardId].img);
+  }
+  //PREVENTING CARDS BEING SHOWN AFTER TWO HAVE BEEN CHOSEN
+  if(cardChosen.length<=2){
+    show();
+  };
+  
   if (cardChosen.length ===2){
     setTimeout(checkMatch, 1500);
   };
-  console.log(cardChosen);
-  console.log(cardChosenId);
-  // SHOWING THE GIF
-  let flipped = document.querySelector(`[data-id='${cardId}']`);
-  flipped.setAttribute('src', cardArray[cardId].img);
 }
+createBoard();
+//RESTART BUTTON
+function restart(){
+  const classCard = document.querySelectorAll('.card');
+  //In order to map over the nodelist, we need to make the nodelist into an array by using the spread operator
+  const sprdNodeList = [...classCard]; 
+  //Use the map method to remove each card from the html
+  sprdNodeList.map(x=>x.remove());
+  //CLEAR OUT PAIRSFOUND
+  pairsFound = 0;
+  //RE-SORT THE CARD ARRAY
+  sortArr();
+  //RECREATE BOARD
+  createBoard()
+}
+const restartBtn = document.querySelector('#restart_btn');
+restartBtn.addEventListener('click', restart );
 
 
-// function restart(){
-//   const restartBtn = document.querySelector('#restart_btn');
-//   restartBtn.addEventListener('click', createBoard());
-// }
 
-createBoard()
-})
+
+  //INFO BUTTON
+  const infoBtn = document.querySelector('#info_btn');
+  const info = function(){
+    alert('HOW TO PLAY THE GAME: Click on any two cards to flip them over and see if they match. When the two chosen cards match, they will be removed from the board and your moves at the bottom-left of the screen will increase by one. When the two chosen cards DO NOT match, they will be flipped back over and your moves will increase by one as well. The goal is to memorize where the pairs are and complete the game with the lowest possible moves. The game continues until all cards have been matched.')
+  }
+  infoBtn.addEventListener('click',info)
+});
+
